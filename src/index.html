@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Freeflow Puzzle Solver</title>
+		
+		<style>
+			#game {
+				border: 1px solid red;
+			}
+			
+			#sizer {
+				float: left;
+				height: 100%;
+				position: absolute;
+				border: 1px solid green;
+				display: none;
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			Choose a puzzle:
+			<select id='puzzle-select'>
+				<option value=''>Choose a level</option>
+			</select>
+		</div>
+
+		<div id='sizer'>Sizer</div>
+		
+		<canvas id='game'></canvas>
+		
+		<script src='js/puzzles.js'></script>
+		<script src='js/ui.js'></script>
+		<script src='js/solver.js'></script>
+	</body>
+</html>
