@@ -41,6 +41,54 @@
 
     const determineFontHeight = memoize(determineFontHeightRaw);
 
+    function addButtons(board) {
+        const buttonHome = document.getElementById('run-buttons');
+        buttonHome.innerHTML = '';
+
+        const singleStep = document.createElement('button');
+        singleStep.type = 'button';
+        singleStep.innerHTML = 'Single Step';
+
+        const gen = window.solver.singleStep(board);
+
+        singleStep.addEventListener('click', () => {
+            const r = gen.next();
+            if (!r.done) {
+                renderBoard(r.value);
+            }
+            console.log(r);
+        });
+
+        const runAll = document.createElement('button');
+        runAll.type = 'button';
+        runAll.innerHTML = 'RunALl';
+
+		
+		let sync = 0;
+        runAll.addEventListener('click', () => {
+			function d() {
+				let r = gen.next();
+				if (!r.done) {
+					sync++;
+					if (sync === 100) {
+						renderBoard(r.value);
+						sync = 0;
+					}
+					window.setTimeout(() => {
+					d();
+					}, 1);
+				}
+			}
+			d();
+
+        });
+
+
+
+        buttonHome.appendChild(singleStep);
+        buttonHome.appendChild(runAll);
+    }
+
     function fillerFactory(ctx, square, squareSize, x, y) {
 
         function drawBoundingBox() {
@@ -54,6 +102,32 @@
         function drawBorderBox() {
             ctx.fillStyle = 'gray';
             ctx.fillRect(x, y, squareSize, squareSize);
+        }
+
+        function drawLine() {
+            const centerX = x + (squareSize / 2);
+            const centerY = y + (squareSize / 2);
+            const color = colors[square.path];
+
+            const xlate = {};
+            xlate[window.solver.direction.north] = 'v';
+            xlate[window.solver.direction.south] = '^';
+            xlate[window.solver.direction.east] = '>';
+            xlate[window.solver.direction.west] = '<';
+
+            ctx.globalCompositeOperation = 'difference';
+            ctx.fillStyle = 'white';
+
+            ctx.textAlign = 'center';
+
+            const style = (squareSize * 0.50) + 'px serif';
+            const text = xlate[square.sourceDirection];
+            const h = determineFontHeight(style, text);
+
+            ctx.fillStyle = color;
+
+            ctx.font = style;
+            ctx.fillText(text, centerX, centerY + (h / 2));
         }
 
         function drawStartPoint() {
@@ -83,7 +157,8 @@
         return {
             drawBoundingBox,
             drawBorderBox,
-            drawStartPoint
+            drawStartPoint,
+            drawLine
         };
     }
 
@@ -132,7 +207,11 @@
                 }
 
                 if (square.path === 'edgemark') {
-                    filler.drawBorderBox(x1, y1);
+                    filler.drawBorderBox();
+                }
+
+                if (square.line) {
+                    filler.drawLine();
                 }
 
                 if (square.startPoint || square.endPoint) {
@@ -164,6 +243,7 @@
                 const level = window.boards[levelName];
                 const board = window.solver.init(level);
                 renderBoard(board);
+                addButtons(board);
             }
         }
 

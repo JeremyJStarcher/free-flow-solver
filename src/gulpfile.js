@@ -62,8 +62,8 @@ function runBabble() {
         .pipe($.if(args.verbose, $.print()))
         .pipe($.sourcemaps.init())
         .pipe($.babel({
-			presets: ['es2015']
-		}))
+            presets: ['es2015'],
+        }))
         .on('error', (err) => {
             tattle('Build error under Babel');
             log(err);

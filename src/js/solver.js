@@ -70,8 +70,49 @@
         return board;
     }
 
+    function* singleStep(board) {
+        const paths = Object.keys(board.paths);
+        let depth = 0;
+
+        function* solve(path, startx, starty) {
+            function* tryMove(path, x, y, direction) {
+                const square = board.grid[x][y];
+                const currPathName = paths[depth];
+                const currPath = board.paths[currPathName];
+
+                if (x === currPath.end[0] && y === currPath.end[1]) {
+                    depth++;
+                    const zpath = paths[depth];
+                    yield * solve(zpath, board.paths[zpath].start[0], board.paths[zpath].start[1]);
+                    depth--;
+                }
+
+                if (square === null) {
+                    board.grid[x][y] = {
+                        path: path,
+                        line: true,
+                        sourceDirection: direction
+                    };
+
+                    yield * solve(path, x, y);
+                    yield board;
+                    board.grid[x][y] = null;
+                }
+            }
+
+            yield * tryMove(path, startx + 1, starty, direction.east);
+            yield * tryMove(path, startx - 1, starty, direction.west);
+            yield * tryMove(path, startx, starty + 1, direction.north);
+            yield * tryMove(path, startx, starty - 1, direction.south);
+        }
+
+        const zpath = paths[depth];
+        yield * solve(zpath, board.paths[zpath].start[0], board.paths[zpath].start[1]);
+    }
+
     window.solver = {
         init,
-        direction
+        direction,
+        singleStep
     };
 }());
