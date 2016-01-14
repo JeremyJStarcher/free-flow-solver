@@ -63,6 +63,7 @@
         runAll.innerHTML = 'Run All';
 
         let lastBoard = null;
+        let tBoard = null;
         let turnCounter = 0;
         const counterSpan = document.getElementById('turn-counter');
 
@@ -71,21 +72,37 @@
                 renderBoard(lastBoard);
             }
             counterSpan.innerHTML = turnCounter;
-            window.setTimeout(drawLastBoard, 1000);
         }
 
         runAll.addEventListener('click', () => {
             drawLastBoard();
 
             function d() {
-                let r;
+                const end = Date.now() + 250;
+                let r = gen.next();
 
-                for (let i = 0; i < 1027; i++) {
+                while (Date.now() < end) {
                     turnCounter++;
                     r = gen.next();
-                    if (!r.done) {
-                        lastBoard = r.value;
+                    tBoard = lastBoard;
+                    lastBoard = r.value;
+                    if (r.done) {
+                        break;
                     }
+                    if (lastBoard.solved) {
+                        break;
+                    }
+                }
+
+                drawLastBoard();
+
+                if (lastBoard && lastBoard.solved) {
+                    console.log('Solution found. Continue?');
+                    return;
+                }
+
+                if (r.done) {
+                    console.log('All Finished');
                 }
 
                 if (!r.done) {

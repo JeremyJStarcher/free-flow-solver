@@ -73,6 +73,7 @@
     function* singleStep(board) {
         const paths = Object.keys(board.paths);
         let depth = 0;
+        let solved = false;
 
         function* solve(path, startx, starty) {
             function* tryMove(path, x, y, direction) {
@@ -83,6 +84,15 @@
                 if (x === currPath.end[0] && y === currPath.end[1]) {
                     depth++;
                     const zpath = paths[depth];
+
+                    if (!zpath) {
+                        solved = true;
+                        board.solved = true;
+                        yield board;
+                        board.solved = false;
+                        return;
+                    }
+
                     yield * solve(zpath, board.paths[zpath].start[0], board.paths[zpath].start[1]);
                     depth--;
                 }
@@ -100,10 +110,21 @@
                 }
             }
 
-            yield * tryMove(path, startx + 1, starty, direction.east);
-            yield * tryMove(path, startx - 1, starty, direction.west);
-            yield * tryMove(path, startx, starty + 1, direction.north);
-            yield * tryMove(path, startx, starty - 1, direction.south);
+            if (!solved) {
+                yield * tryMove(path, startx + 1, starty, direction.east);
+            }
+
+            if (!solved) {
+                yield * tryMove(path, startx - 1, starty, direction.west);
+            }
+
+            if (!solved) {
+                yield * tryMove(path, startx, starty + 1, direction.north);
+            }
+
+            if (!solved) {
+                yield * tryMove(path, startx, starty - 1, direction.south);
+            }
         }
 
         const zpath = paths[depth];
