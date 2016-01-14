@@ -156,9 +156,9 @@
 
         function showSelectedBoard(event) {
             let target = event.target || event.srcElement;
-			while(target.tagName.toLowerCase() !== 'select') {
-			target = target.parentNode;
-			}
+            while (target.tagName.toLowerCase() !== 'select') {
+                target = target.parentNode;
+            }
             const levelName = target.options[target.selectedIndex].value;
             if (levelName) {
                 const level = window.boards[levelName];
