@@ -56,34 +56,46 @@
             if (!r.done) {
                 renderBoard(r.value);
             }
-            console.log(r);
         });
 
         const runAll = document.createElement('button');
         runAll.type = 'button';
-        runAll.innerHTML = 'RunALl';
+        runAll.innerHTML = 'Run All';
 
-		
-		let sync = 0;
+        let lastBoard = null;
+        let turnCounter = 0;
+        const counterSpan = document.getElementById('turn-counter');
+
+        function drawLastBoard() {
+            if (lastBoard) {
+                renderBoard(lastBoard);
+            }
+            counterSpan.innerHTML = turnCounter;
+            window.setTimeout(drawLastBoard, 1000);
+        }
+
         runAll.addEventListener('click', () => {
-			function d() {
-				let r = gen.next();
-				if (!r.done) {
-					sync++;
-					if (sync === 100) {
-						renderBoard(r.value);
-						sync = 0;
-					}
-					window.setTimeout(() => {
-					d();
-					}, 1);
-				}
-			}
-			d();
+            drawLastBoard();
 
+            function d() {
+                let r;
+
+                for (let i = 0; i < 1027; i++) {
+                    turnCounter++;
+                    r = gen.next();
+                    if (!r.done) {
+                        lastBoard = r.value;
+                    }
+                }
+
+                if (!r.done) {
+                    window.setTimeout(() => {
+                        d();
+                    }, 1);
+                }
+            }
+            d();
         });
-
-
 
         buttonHome.appendChild(singleStep);
         buttonHome.appendChild(runAll);
