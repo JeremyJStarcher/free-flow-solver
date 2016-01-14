@@ -61,7 +61,9 @@ function runBabble() {
     return gulp.src(config.src)
         .pipe($.if(args.verbose, $.print()))
         .pipe($.sourcemaps.init())
-        .pipe($.babel())
+        .pipe($.babel({
+			presets: ['es2015']
+		}))
         .on('error', (err) => {
             tattle('Build error under Babel');
             log(err);

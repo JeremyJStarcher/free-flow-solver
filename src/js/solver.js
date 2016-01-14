@@ -39,6 +39,34 @@
                 board.grid[x][y] = val;
             }
         }
+
+        // Set starting and ending paths
+        Object.keys(board.paths).forEach(pathName => {
+            const path = board.paths[pathName];
+
+            const startX = path.start[0];
+            const startY = path.start[1];
+
+            const startMark = {
+                path: pathName,
+                startPoint: true,
+                endPoint: false
+            };
+
+            board.grid[startX][startY] = startMark;
+
+            const endX = path.end[0];
+            const endY = path.end[1];
+
+            const endMark = {
+                path: pathName,
+                startPoint: false,
+                endPoint: true
+            };
+
+            board.grid[endX][endY] = endMark;
+        });
+
         return board;
     }
 
