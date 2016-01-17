@@ -35,5 +35,45 @@
         }
     };
 
+    boards['10x10-l71'] = {
+        title: '10x10 Level 10',
+        height: 10,
+        width: 10,
+        paths: {
+            a: {
+                start: [1, 5],
+                end: [0, 7]
+            },
+            b: {
+                start: [2, 8],
+                end: [4, 7]
+            },
+            c: {
+                start: [5, 7],
+                end: [7, 6]
+            },
+            d: {
+                start: [1, 3],
+                end: [0, 9]
+            },
+            e: {
+                start: [2, 7],
+                end: [4, 4]
+            },
+            f: {
+                start: [6, 9],
+                end: [7, 5]
+            },
+            g: {
+                start: [5, 4],
+                end: [5, 6]
+            },
+            h: {
+                start: [0, 8],
+                end: [6, 6]
+            },
+        }
+    };
+
     window.boards = boards;
 }());

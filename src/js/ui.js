@@ -8,6 +8,7 @@
         d: 'pink',
         e: 'purple',
         f: 'magenta',
+        g: 'yellow',
         h: 'silver',
         i: 'brown'
     };
@@ -78,7 +79,7 @@
             drawLastBoard();
 
             function d() {
-                const end = Date.now() + 250;
+                const end = Date.now() + 1500;
                 let r = gen.next();
 
                 while (Date.now() < end) {
