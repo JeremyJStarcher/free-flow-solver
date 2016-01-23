@@ -31,7 +31,10 @@
             board.grid[x][h] = edgeMark;
 
             for (let y = 0; y < (h); y++) {
-                let val = null;
+                let val = {
+					path: null
+				};
+				
                 if (x === -1 || x === level.width) {
                     val = edgeMark;
 
@@ -97,7 +100,7 @@
                     depth--;
                 }
 
-                if (square === null) {
+                if (square.path === null) {
                     board.grid[x][y] = {
                         path: path,
                         line: true,
@@ -106,7 +109,7 @@
 
                     yield * solve(path, x, y);
                     yield board;
-                    board.grid[x][y] = null;
+                    board.grid[x][y].path = null;
                 }
             }
 
