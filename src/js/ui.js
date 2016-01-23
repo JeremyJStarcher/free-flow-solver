@@ -2,7 +2,7 @@
     'use strict';
 
     const colors = {
-        a: 'blue',
+        a: 'teal',
         b: 'green',
         c: 'cyan',
         d: 'pink',
