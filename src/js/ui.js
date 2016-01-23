@@ -79,11 +79,14 @@
             drawLastBoard();
 
             function d() {
-                const end = Date.now() + 1500;
+                const end = Date.now() + 1000;
                 let r = gen.next();
+                let turnsThisClick = 0;
 
                 while (Date.now() < end) {
                     turnCounter++;
+                    turnsThisClick++;
+
                     r = gen.next();
                     tBoard = lastBoard;
                     lastBoard = r.value;
@@ -94,6 +97,7 @@
                         break;
                     }
                 }
+                document.getElementById('turn-per-click').innerHTML = turnsThisClick;
 
                 drawLastBoard();
 
